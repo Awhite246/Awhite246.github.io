@@ -3,67 +3,67 @@ const display_input = document.querySelector('.display .input');
 const display_output = document.querySelector('.display .output');
 
 let input = "";
+let result = "";
 
 for (let key of keys) {
     const value = key.dataset.key;
 
     key.addEventListener('click', () => {
-        if (value == "clear") { //AC
-            input = "";
-            display_input.innerHTML = "";
-            display_output.innerHTML = "";
-        } else if (value == "backspace") { //<
-            input = input.slice(0, -1);
-            display_input.innerHTML = CleanInput(input);
-        } else if (value == "=") {
-            let result = eval(PrepareInput(input));
-
-            display_output.innerHTML = CleanOutput(result);
-        } else if (value == "brackets") { //()
-            if (
-            input.indexOf("(") == -1 || 
-            input.indexOf("(") != -1 && 
-            input.indexOf(")") != -1 && 
-            input.lastIndexOf("(") < input.lastIndexOf(")")) {
-                input += "(";
-            } else if (
-            input.indexOf("(") != -1 && 
-            input.indexOf(")") == -1 ||
-            input.indexOf("(") != -1 &&
-            input.indexOf(")") != -1 &&
-            input.lastIndexOf("(") > input.lastIndexOf(")")) {
-                input += ")";
-            }
-
-            display_input.innerHTML = CleanInput(input);
-        } else { //Numbers and operators
-            if (ValidateInput(value)) {
-                input += value;
-                display_input.innerHTML = CleanInput(input);
-            }
+        switch (value) {
+            case "clear":
+                input = "";
+                result = "";
+                break;
+            case "backspace":
+                input = input.slice(0, -1);
+                break;
+            case "=":
+                result = eval(PrepareInput(input));
+                break;
+            case "brackets":
+                if (input.lastIndexOf("(") <= input.lastIndexOf(")")) {
+                    input += "(";
+                } else {
+                    input += ")";
+                }
+                break;
+            default:
+                if (ValidateInput(value)) {
+                    input += value;
+                }
         }
+        display_input.innerHTML = CleanInput(input);
+        display_output.innerHTML = CleanOutput(result);
     })
 }
 
 function CleanInput(input) {
     let input_array = input.split("");
-    let input_array_length = input_array.length;
 
-    for (let i = 0; i < input_array_length; i++) {
-        if (input_array[i] == "*") {
-            input_array[i] = ' <span class="operator">x</span> ';
-        } else if (input_array[i] == "/") {
-            input_array[i] = ' <span class="operator">÷</span> ';
-        } else if (input_array[i] == "+") {
-            input_array[i] = ' <span class="operator">+</span> ';
-        } else if (input_array[i] == "-") {
-            input_array[i] = ' <span class="operator">-</span> ';
-        } else if (input_array[i] == "(") {
-            input_array[i] = '<span class="brackets">(</span>';
-        } else if (input_array[i] == ")") {
-            input_array[i] = '<span class="brackets">)</span>';
-        } else if (input_array[i] == "%") {
-            input_array[i] = ' <span class="percent">%</span> ';
+    for (let i = 0; i < input_array.length; i++) {
+        let new_char = ''
+        switch(input_array[i]) {
+            case "*":
+                input_array[i] = ' <span class="operator">x</span> ';
+                break;
+            case "/":
+                input_array[i] = ' <span class="operator">÷</span> ';
+                break;
+            case "+":
+                input_array[i] = ' <span class="operator">+</span> ';
+                break;
+            case "-":
+                input_array[i] = ' <span class="operator">-</span> ';
+                break;
+            case "(":
+                input_array[i] = '<span class="brackets">(</span>';
+                break;
+            case ")":
+                input_array[i] = '<span class="brackets">)</span>';
+                break;
+            case "%":
+                input_array[i] = ' <span class="percent">%</span> ';
+                break;
         }
     }
 
@@ -93,26 +93,22 @@ function CleanOutput(output) {
 
 function ValidateInput(value) {
     let last_input = input.slice(-1);
-    let operators = ["+", "-", "*", "/"];
-
-    if (value == "." && last_input == ".") {
+    let operators = ["+", "-", "*", "/","%"];
+    
+    if (input.length == 0 && operators.includes(value)) {
         return false;
     }
 
-    if (operators.includes(value)) {
-        if (last_input == value) {
-            return false;
-        }
-        return true;
+    if (operators.includes(value) && operators.includes(last_input)) {
+        return false;
     }
-
     return true;
 }
 
 function PrepareInput(input) {
     let input_array = input.split("");
 
-    for (let i = 0; i < input_array.length; i++) {
+    for (let i = 1; i < input_array.length; i++) {
         if (input_array[i] == "%") {
             input_array[i] = "/100";
         }
