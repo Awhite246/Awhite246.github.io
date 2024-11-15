@@ -24,6 +24,9 @@ for (let key of keys) {
                 result = "";
                 break;
             case "backspace":
+                if (input.slice(-1) == "(") {
+                    input = input.slice(0, -1);
+                }
                 input = input.slice(0, -1);
                 break;
             case "=":
@@ -33,8 +36,16 @@ for (let key of keys) {
             case "brackets":
                 let lBracketIndex = input.lastIndexOf("(");
                 if (lBracketIndex <= input.lastIndexOf(")")) {
-                    if(ValidateInput("(")) input += "(";
+                    if(ValidateInput("(")) { 
+                        if (input != "" && !lastIsOperator || input.slice(-1) == ")") {
+                            input += "*"
+                        }
+                        input += "(";
+                    }
                 } else if (lBracketIndex == input.length - 1){
+                    if (input.slice(-1) == "(") {
+                        input = input.slice(0, -1);
+                    }
                     input = input.slice(0, -1);
                 } else {
                     if(ValidateInput(")")) input += ")";
@@ -79,7 +90,7 @@ function CleanInput(input) {
                 input_array[i] = ' <span class="action">%</span> ';
                 break;
             case "A":
-                input_array[i] = ' <span class="action">Ans</span> ';
+                input_array[i] = ' <span class="action">[Ans]</span> ';
         }
     }
 
@@ -117,6 +128,7 @@ function ValidateInput(value) {
 
     //Checks for 'operator' ) or ( 'operator'
     if (value == ")" && lastIsOperator) {
+        isOperator = true;
         return false;
     }
     if (last_input == "(" && isOperator) {
@@ -136,6 +148,9 @@ function PrepareInput(input) {
 
     if (input_array[0] == "A") {
         input_array[0] = result;
+        if (input_array.length >= 1 && !operators.includes(input_array[1])) {
+            input_array[0] += "*";
+        }
     }
 
     for (let i = 1; i < input_array.length; i++) {
