@@ -5,6 +5,10 @@
     font-family: sans-serif;
 }
 
+header {
+    padding-left: 0.5rem;
+}
+
 .app {
     display: flex;
     justify-content: center;
@@ -13,6 +17,7 @@
 }
 
 .calculator{
+    background-image: url(BlackScreen.png);
     background-color: hsl(0, 0%, 11%);
     width: 100%;
     max-width: 375px;
@@ -56,6 +61,7 @@
 }
 
 .keys {
+    background-image: url(BluePlasticBackground.png);
     background-color: #292D36;
     padding: 1.5rem;
     border-radius: 1.5rem 1.5rem 0 0;
@@ -70,13 +76,14 @@
 .keys .key {
     position: relative;
     cursor: pointer;
+    box-shadow: inset -5px -5px 8px rgba(0,0,0,0.2);
 
     display: block;
     height: 0;
     padding-top: 100%;
-    background-color: #262933;
+    background-color: #423124;
     border-radius: 1rem;
-    transition: 0.2s;
+    transition: 0.075s;
     user-select: none;
 }
 
@@ -92,13 +99,20 @@
 }
 
 .keys .key:hover{
-    box-shadow: inset 0px 0px 8px rgba(0,0,0,0.2);
+    box-shadow: inset 5px 5px 8px rgba(0, 0, 0, 0.2);
+}
+
+.keys .key.operator{
+    background-color: #084C61;
+}
+.keys .key.action{
+    background-color: #E3B505;
 }
 
 .keys .key.operator span{
-    color: #EB6666;
+    color: #DB504A;
 }
 
 .keys .key.action span{
-    color: #27FED7;
+    color: #4F6D7A;
 }

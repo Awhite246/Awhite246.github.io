@@ -2,7 +2,7 @@ const keys = document.querySelectorAll('.key');
 const display_input = document.querySelector('.display .input');
 const display_output = document.querySelector('.display .output');
 
-const operators = ["+", "-", "*", "/","%"];
+const operators = ["+", "-", "*", "/"];
 let input = "";
 let result = "";
 let isOperator = false;
@@ -131,9 +131,10 @@ function ValidateInput(value) {
         isOperator = true;
         return false;
     }
-    if (last_input == "(" && isOperator) {
+    if (last_input == "(" && (isOperator || input == "%")) {
         return false;
     }
+
 
     if (operators.includes(value)) {
         if (operators.includes(last_input)) {
