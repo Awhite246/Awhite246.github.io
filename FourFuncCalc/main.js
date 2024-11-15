@@ -21,10 +21,13 @@ for (let key of keys) {
                 result = eval(PrepareInput(input));
                 break;
             case "brackets":
-                if (input.lastIndexOf("(") <= input.lastIndexOf(")")) {
-                    input += "(";
+                let lBracketIndex = input.lastIndexOf("(");
+                if (lBracketIndex <= input.lastIndexOf(")")) {
+                    if(ValidateInput("(")) input += "(";
+                } else if (lBracketIndex == input.length - 1){
+                    input = input.slice(0, -1);
                 } else {
-                    input += ")";
+                    if(ValidateInput(")")) input += ")";
                 }
                 break;
             default:
@@ -93,14 +96,28 @@ function CleanOutput(output) {
 
 function ValidateInput(value) {
     let last_input = input.slice(-1);
+
     let operators = ["+", "-", "*", "/","%"];
-    
-    if (input.length == 0 && operators.includes(value)) {
+    let isOperator = operators.includes(value);
+    let lastIsOperator = operators.includes(last_input);
+
+    //No first input as operator
+    if (input.length == 0 && isOperator) {
         return false;
     }
 
-    if (operators.includes(value) && operators.includes(last_input)) {
+    //Checks for 'operator' ) or ( 'operator'
+    if (value == ")" && lastIsOperator) {
         return false;
+    }
+    if (last_input == "(" && isOperator) {
+        return false;
+    }
+
+    if (operators.includes(value)) {
+        if (operators.includes(last_input)) {
+            return false;
+        }
     }
     return true;
 }
