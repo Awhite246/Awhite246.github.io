@@ -2,13 +2,22 @@ const keys = document.querySelectorAll('.key');
 const display_input = document.querySelector('.display .input');
 const display_output = document.querySelector('.display .output');
 
+const operators = ["+", "-", "*", "/","%"];
 let input = "";
 let result = "";
+let isOperator = false;
+let lastIsOperator = false;
+let lastIsEquals = false;
 
 for (let key of keys) {
     const value = key.dataset.key;
 
     key.addEventListener('click', () => {
+        isOperator = operators.includes(value);
+        if (isOperator && (lastIsEquals || (result != "" && input == ""))) {
+            input = "A";
+        }
+        lastIsEquals = false;
         switch (value) {
             case "clear":
                 input = "";
@@ -19,6 +28,7 @@ for (let key of keys) {
                 break;
             case "=":
                 result = eval(PrepareInput(input));
+                lastIsEquals = true;
                 break;
             case "brackets":
                 let lBracketIndex = input.lastIndexOf("(");
@@ -35,6 +45,8 @@ for (let key of keys) {
                     input += value;
                 }
         }
+        lastIsOperator = isOperator;
+
         display_input.innerHTML = CleanInput(input);
         display_output.innerHTML = CleanOutput(result);
     })
@@ -44,7 +56,6 @@ function CleanInput(input) {
     let input_array = input.split("");
 
     for (let i = 0; i < input_array.length; i++) {
-        let new_char = ''
         switch(input_array[i]) {
             case "*":
                 input_array[i] = ' <span class="operator">x</span> ';
@@ -59,14 +70,16 @@ function CleanInput(input) {
                 input_array[i] = ' <span class="operator">-</span> ';
                 break;
             case "(":
-                input_array[i] = '<span class="brackets">(</span>';
+                input_array[i] = '<span class="action">(</span>';
                 break;
             case ")":
-                input_array[i] = '<span class="brackets">)</span>';
+                input_array[i] = '<span class="action">)</span>';
                 break;
             case "%":
-                input_array[i] = ' <span class="percent">%</span> ';
+                input_array[i] = ' <span class="action">%</span> ';
                 break;
+            case "A":
+                input_array[i] = ' <span class="action">Ans</span> ';
         }
     }
 
@@ -97,10 +110,6 @@ function CleanOutput(output) {
 function ValidateInput(value) {
     let last_input = input.slice(-1);
 
-    let operators = ["+", "-", "*", "/","%"];
-    let isOperator = operators.includes(value);
-    let lastIsOperator = operators.includes(last_input);
-
     //No first input as operator
     if (input.length == 0 && isOperator) {
         return false;
@@ -124,6 +133,10 @@ function ValidateInput(value) {
 
 function PrepareInput(input) {
     let input_array = input.split("");
+
+    if (input_array[0] == "A") {
+        input_array[0] = result;
+    }
 
     for (let i = 1; i < input_array.length; i++) {
         if (input_array[i] == "%") {
