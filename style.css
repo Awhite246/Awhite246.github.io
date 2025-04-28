@@ -1,5 +1,7 @@
 body{
-    margin: 0px;
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
 }
 main{
     margin-left: 20px;
@@ -29,4 +31,74 @@ h1{
 .navbar li{
     float: left;
     overflow: hidden;
+}
+
+
+.particle-link-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.party-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 4px solid;
+    border-radius: 12px;
+    animation: partyBorder 0.5s infinite, glow 1s infinite alternate, bounce 1s infinite, textColor 0.5s infinite;
+}
+
+.particle-link {
+    position: relative;
+    z-index: 2;
+    color: #ff0000;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+@keyframes partyBorder {
+    0% { border-color: red; }
+    20% { border-color: orange; }
+    40% { border-color: yellow; }
+    60% { border-color: green; }
+    80% { border-color: blue; }
+    100% { border-color: violet; }
+}
+
+@keyframes textColor {
+    0% { color: cyan; }
+    20% { color: blue; }
+    40% { color: purple; }
+    60% { color: magenta; }
+    80% { color: orange; } 
+    100% { color: yellow; }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px red; }
+    50% { box-shadow: 0 0 20px yellow; }
+    100% { box-shadow: 0 0 5px blue; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
